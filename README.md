@@ -1,8 +1,8 @@
-# Managed Identity Lifecycle Framework
+# Managed Identity Automation Utilities
 
 A PowerShell module for making day-to-day **Managed Identity operations in Azure a little easier**.
 
-The Managed Identity Lifecycle Framework (Managed Identity Lifecycle Framework) brings together Azure Resource Graph, Azure RBAC, and Microsoft Graph application permissions into a set of PowerShell commands that are designed to work naturally with the pipeline.
+The Managed Identity Automation Utilities brings together Azure Resource Graph, Azure RBAC, and Microsoft Graph application permissions into a set of PowerShell commands that are designed to work naturally with the pipeline.
 
 Whether you're looking for managed identities across a tenant, checking their permissions, or bringing those permissions back to a desired state, the goal is to make common identity operations simple, scriptable, and repeatable.
 
@@ -39,7 +39,7 @@ Get-MIIdentity -Name func-api-prod |
 
 ## Where Things Stand
 
-Managed Identity Lifecycle Framework is still growing, and there are a few areas that aren't implemented yet.
+Managed Identity Automation Utilities is still growing, and there are a few areas that aren't implemented yet.
 
 Currently:
 
@@ -101,7 +101,7 @@ Your account also needs sufficient permissions to read and modify the relevant A
 From the repository root:
 
 ```powershell
-Import-Module ./src/MILF.psm1 -Force
+Import-Module ./src/MIAU.psm1 -Force
 ```
 
 ## Quick Start
@@ -298,7 +298,7 @@ Some of the obvious next steps include:
 * Adding an explicit module manifest and dependency declarations.
 * Cleaning up command/file naming inconsistencies.
 
-The intention is to grow Managed Identity Lifecycle Framework incrementally while keeping the commands useful for real-world PowerShell automation.
+The intention is to grow Managed Identity Automation Utilities incrementally while keeping the commands useful for real-world PowerShell automation.
 
 ## Contributing
 
