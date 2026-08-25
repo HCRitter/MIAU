@@ -1,5 +1,5 @@
 # Managed Identity Lifecycle Framework
-
+![MILF Logo](MILF_Logo.png)
 A PowerShell module for making day-to-day **Managed Identity operations in Azure a little easier**.
 
 The Managed Identity Lifecycle Framework (Managed Identity Lifecycle Framework) brings together Azure Resource Graph, Azure RBAC, and Microsoft Graph application permissions into a set of PowerShell commands that are designed to work naturally with the pipeline.
