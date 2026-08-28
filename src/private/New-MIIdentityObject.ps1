@@ -3,6 +3,7 @@ function New-MIIdentityObject {
         [string]$Name,
         [string]$IdentityType,
         [string]$PrincipalId,
+        [string]$ClientId,
         [string]$TenantId,
         [string]$ResourceName,
         [string]$ResourceType,
@@ -22,6 +23,7 @@ function New-MIIdentityObject {
         IdentityType       = $IdentityType
 
         PrincipalId        = $PrincipalId
+        ClientId           = $ClientId
         TenantId           = $TenantId
 
         ResourceName       = $ResourceName

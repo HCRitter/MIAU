@@ -2,7 +2,6 @@ function Get-MIInventory {
 
     [CmdletBinding()]
     param()
-    $subscriptions = Get-AzSubscription | Group-Object Id -AsHashTable -AsString
     $query = @'
 resources
 | where isnotnull(identity)
@@ -16,6 +15,11 @@ resources
     location,
     tags,
     identity
+| join kind=leftouter (
+    resourcecontainers
+    | where type == 'microsoft.resources/subscriptions'
+    | project subscriptionId, subscriptionName = name
+) on subscriptionId
 '@
 
     $resources = Search-AzGraph -Query $query -First 1000
@@ -28,34 +32,35 @@ resources
             ResourceKind      = $resource.kind
             ResourceGroupName = $resource.ResourceGroup
             SubscriptionId    = $resource.SubscriptionId
-            SubscriptionName  = $subscriptions[$resource.SubscriptionId].Name
+            SubscriptionName  = $resource.SubscriptionName
             Location          = $resource.Location
             Tags              = $resource.Tags
+            TenantId          = $resource.Identity.TenantId
         }
 
-        if ($resource.Identity.Type -match 'SystemAssigned') {
-
-            $newMIIdentityObjectSplat = @{
-                name = $resource.Name
-                IdentityType = 'SystemAssigned'
-                PrincipalId = $resource.Identity.PrincipalId
-                TenantId = $resource.Identity.TenantId
-                ResourceId = $resource.Id
+        $identities = @(
+            if ($resource.Identity.Type -match 'SystemAssigned') {
+                @{
+                    Name         = $resource.Name
+                    IdentityType = 'SystemAssigned'
+                    PrincipalId  = $resource.Identity.PrincipalId
+                    ResourceId   = $resource.Id
+                }
             }
 
-            New-MIIdentityObject @newMIIdentityObjectSplat @common
-        }
-
-        foreach ($identity in $resource.Identity.UserAssignedIdentities.PSObject.Properties) {
-
-            New-MIIdentityObject @common @{
-                Name         = ($identity.Name -split '/')[-1]
-                IdentityType = 'UserAssigned'
-                PrincipalId  = $identity.Value.PrincipalId
-                ClientId     = $identity.Value.ClientId
-                TenantId     = $resource.Identity.TenantId
-                ResourceId   = $identity.Name
+            foreach ($identity in $resource.Identity.UserAssignedIdentities.PSObject.Properties) {
+                @{
+                    Name         = ($identity.Name -split '/')[-1]
+                    IdentityType = 'UserAssigned'
+                    PrincipalId  = $identity.Value.PrincipalId
+                    ClientId     = $identity.Value.ClientId
+                    ResourceId   = $identity.Name
+                }
             }
+        )
+
+        foreach ($identity in $identities) {
+            New-MIIdentityObject @common @identity
         }
     }
 }
